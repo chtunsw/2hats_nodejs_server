@@ -38,7 +38,7 @@ const isHourValid = hour => {
     return false;
   } else if (isNaN(hour)) {
     return false;
-  } else if (Number(hour) < 0 || Number(hour) > 24) {
+  } else if (Number(hour) < 0 || Number(hour) > 23) {
     return false;
   }
   return true;
@@ -49,7 +49,7 @@ const isMinuteValid = minute => {
     return false;
   } else if (isNaN(minute)) {
     return false;
-  } else if (Number(minute) < 0 || Number(minute) > 60) {
+  } else if (Number(minute) < 0 || Number(minute) > 59) {
     return false;
   }
   return true;
