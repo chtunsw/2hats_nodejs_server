@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/chtunsw/2hats_nodejs_server#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "googleapis": "^43.0.0"
   }
 }
