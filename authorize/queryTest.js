@@ -36,5 +36,6 @@ function listEvents(auth) {
 (() => {
   const auth = createOAuth();
   console.log("res:", auth);
+  // hardcode to wait auth return
   setTimeout(() => listEvents(auth), 2000);
 })();

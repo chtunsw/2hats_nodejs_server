@@ -57,15 +57,13 @@ function getAccessToken(oAuth2Client) {
   return oAuth2Client;
 }
 
+// create and return oAuth client
 module.exports = function createOAuth() {
-  var auth;
-  // Load client secrets from a local file.
-  fs.readFile("credentials.json", (err, content) => {
-    if (err) return console.log("Error loading client secret file:", err);
-    // Authorize a client with credentials, then call the Google Calendar API.
-    auth = authorize(JSON.parse(content));
-    console.log("auth in:", auth);
+  try {
+    const content = fs.readFileSync("credentials.json");
+    const auth = authorize(JSON.parse(content));
     return auth;
-  });
-  console.log("auth out:", auth);
+  } catch (e) {
+    console.log(e);
+  }
 };
