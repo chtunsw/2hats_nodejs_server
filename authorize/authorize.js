@@ -1,17 +1,9 @@
+"use strict";
 const fs = require("fs");
 const readline = require("readline");
 const { google } = require("googleapis");
 
 const TOKEN_PATH = "token.json";
-var oAuthClient;
-
-// Load client secrets from a local file.
-fs.readFile("credentials.json", (err, content) => {
-  if (err) return console.log("Error loading client secret file:", err);
-  // Authorize a client with credentials, then call the Google Calendar API.
-  oAuthClient = authorize(JSON.parse(content));
-  listEvents(oAuthClient);
-});
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -26,13 +18,12 @@ function authorize(credentials) {
     client_secret,
     redirect_uris[0]
   );
-
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client);
     oAuth2Client.setCredentials(JSON.parse(token));
-    return oAuth2Client;
   });
+  return oAuth2Client;
 }
 
 /**
@@ -61,37 +52,20 @@ function getAccessToken(oAuth2Client) {
         if (err) return console.error(err);
         console.log("Token stored to", TOKEN_PATH);
       });
-      return oAuth2Client;
     });
   });
+  return oAuth2Client;
 }
 
-/**
- * Lists the next 10 events on the user's primary calendar.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listEvents(auth) {
-  const calendar = google.calendar({ version: "v3", auth });
-  calendar.events.list(
-    {
-      calendarId: "primary",
-      timeMin: new Date().toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: "startTime"
-    },
-    (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
-      const events = res.data.items;
-      if (events.length) {
-        console.log("Upcoming 10 events:");
-        events.map((event, i) => {
-          const start = event.start.dateTime || event.start.date;
-          console.log(`${start} - ${event.summary}`);
-        });
-      } else {
-        console.log("No upcoming events found.");
-      }
-    }
-  );
-}
+module.exports = function createOAuth() {
+  var auth;
+  // Load client secrets from a local file.
+  fs.readFile("credentials.json", (err, content) => {
+    if (err) return console.log("Error loading client secret file:", err);
+    // Authorize a client with credentials, then call the Google Calendar API.
+    auth = authorize(JSON.parse(content));
+    console.log("auth in:", auth);
+    return auth;
+  });
+  console.log("auth out:", auth);
+};
