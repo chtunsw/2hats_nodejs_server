@@ -37,9 +37,4 @@ function listEvents(auth) {
   const auth = await createOAuth();
   console.log("res1:", auth);
   listEvents(auth);
-  // hardcode to wait auth return
-  setTimeout(() => {
-    console.log("res2:", auth);
-    listEvents(auth);
-  }, 2000);
 })();
