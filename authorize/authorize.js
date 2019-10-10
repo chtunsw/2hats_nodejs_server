@@ -11,17 +11,17 @@ const TOKEN_PATH = "token.json";
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials) {
+async function authorize(credentials) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
+  const oAuth2Client = await new google.auth.OAuth2(
     client_id,
     client_secret,
     redirect_uris[0]
   );
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
+  await fs.readFile(TOKEN_PATH, async (err, token) => {
     if (err) return getAccessToken(oAuth2Client);
-    oAuth2Client.setCredentials(JSON.parse(token));
+    await oAuth2Client.setCredentials(JSON.parse(token));
   });
   return oAuth2Client;
 }
@@ -58,10 +58,10 @@ function getAccessToken(oAuth2Client) {
 }
 
 // create and return oAuth client
-module.exports = function createOAuth() {
+module.exports = async function createOAuth() {
   try {
-    const content = fs.readFileSync("credentials.json");
-    const auth = authorize(JSON.parse(content));
+    const content = await fs.readFileSync("credentials.json");
+    const auth = await authorize(JSON.parse(content));
     return auth;
   } catch (e) {
     console.log(e);
