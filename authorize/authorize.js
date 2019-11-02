@@ -26,9 +26,10 @@ async function authorize(credentials) {
   // Check if we have previously stored a token.
   try {
     const token = await promisifiedReadFile(TOKEN_PATH);
-    oAuth2Client.setCredentials(JSON.parse(token));
+    oAuth2Client.setCredentials(JSON.parse(token).tokens);
   } catch (e) {
-    return getAccessToken(oAuth2Client);
+    console.log("need a new token:");
+    return await getAccessToken(oAuth2Client);
   }
 
   return oAuth2Client;
@@ -46,38 +47,51 @@ async function getAccessToken(oAuth2Client) {
     scope: ["https://www.googleapis.com/auth/calendar"]
   });
   console.log("Authorize this app by visiting this url:", authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  rl.question("Enter the code from that page here: ", async code => {
-    rl.close();
-    // old approach
-    // oAuth2Client.getToken(code, (err, token) => {
-    //   if (err) return console.error("Error retrieving access token", err);
-    //   oAuth2Client.setCredentials(token);
-    //   // Store the token to disk for later program executions
-    //   fs.writeFile(TOKEN_PATH, JSON.stringify(token), err => {
-    //     if (err) return console.error(err);
-    //     console.log("Token stored to", TOKEN_PATH);
-    //   });
-    // });
-
-    // new approach
-    try {
-      const token = await oAuth2Client.getToken(code);
+  const authPromise = new Promise((resolve, reject) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+    rl.question("Enter the code from that page here: ", async code => {
+      rl.close();
       try {
-        await oAuth2Client.setCredentials(token);
-        await promisifiedWriteFile(TOKEN_PATH, JSON.stringify(token));
-        console.log("Token stored to", TOKEN_PATH);
+        const token = await oAuth2Client.getToken(code);
+        try {
+          await oAuth2Client.setCredentials(token.tokens);
+          await promisifiedWriteFile(TOKEN_PATH, JSON.stringify(token));
+          console.log("Token stored to", TOKEN_PATH);
+          resolve(oAuth2Client);
+        } catch (e) {
+          console.log(e);
+          reject("e");
+        }
       } catch (e) {
-        return console.error(err);
+        console.log("Error retrieving access token", e);
+        reject("e");
       }
-    } catch (e) {
-      return console.error("Error retrieving access token", err);
-    }
+    });
   });
-  return oAuth2Client;
+  return authPromise;
+  // const rl = readline.createInterface({
+  //   input: process.stdin,
+  //   output: process.stdout
+  // });
+  // rl.question("Enter the code from that page here: ", async code => {
+  //   rl.close();
+  //   try {
+  //     const token = await oAuth2Client.getToken(code);
+  //     try {
+  //       await oAuth2Client.setCredentials(token);
+  //       await promisifiedWriteFile(TOKEN_PATH, JSON.stringify(token));
+  //       console.log("Token stored to", TOKEN_PATH);
+  //     } catch (e) {
+  //       return console.error(err);
+  //     }
+  //   } catch (e) {
+  //     return console.error("Error retrieving access token", err);
+  //   }
+  // });
+  // return oAuth2Client;
 }
 
 // create and return oAuth client
