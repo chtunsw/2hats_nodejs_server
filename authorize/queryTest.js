@@ -6,8 +6,7 @@ const { google } = require("googleapis");
  * Lists the next 10 events on the user's primary calendar.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-async function canlendarTest(auth) {
-  const calendar = await google.calendar({ version: "v3", auth });
+async function canlendarTest(calendar) {
   try {
     const res = await calendar.calendarList.list({});
     const calendars = res.data.items;
@@ -49,5 +48,6 @@ async function canlendarTest(auth) {
 (async () => {
   const auth = await createOAuth();
   console.log("auth res:", auth);
-  canlendarTest(auth);
+  const calendar = await google.calendar({ version: "v3", auth });
+  canlendarTest(calendar);
 })();
