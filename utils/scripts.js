@@ -55,6 +55,21 @@ const isMinuteValid = minute => {
   return true;
 };
 
+const getAllDaysFromMonth = (year, month) => {
+  let date = new Date(Date.UTC(year, month - 1));
+  let targetMonth = date.getMonth();
+  console.log("targetMonth:", targetMonth);
+  let dateList = [];
+  while (date.getMonth() === targetMonth) {
+    dateList.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+    console.log("date:", date);
+  }
+  return dateList;
+};
+
+console.log(getAllDaysFromMonth(2019, 10));
+
 module.exports = {
   isYearValid,
   isMonthValid,
