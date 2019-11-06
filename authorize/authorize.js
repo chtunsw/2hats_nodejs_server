@@ -8,15 +8,15 @@ const { google } = require("googleapis");
 const promisifiedReadFile = util.promisify(fs.readFile);
 const promisifiedWriteFile = util.promisify(fs.writeFile);
 
-const TOKEN_PATH = "token.json";
-
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-async function authorize(credentials) {
+async function authorize(CREDENTIAL_PATH, TOKEN_PATH) {
+  const fileContent = await promisifiedReadFile(CREDENTIAL_PATH);
+  const credentials = JSON.parse(fileContent);
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -72,35 +72,6 @@ async function getAccessToken(oAuth2Client) {
     });
   });
   return authPromise;
-  // const rl = readline.createInterface({
-  //   input: process.stdin,
-  //   output: process.stdout
-  // });
-  // rl.question("Enter the code from that page here: ", async code => {
-  //   rl.close();
-  //   try {
-  //     const token = await oAuth2Client.getToken(code);
-  //     try {
-  //       await oAuth2Client.setCredentials(token);
-  //       await promisifiedWriteFile(TOKEN_PATH, JSON.stringify(token));
-  //       console.log("Token stored to", TOKEN_PATH);
-  //     } catch (e) {
-  //       return console.error(err);
-  //     }
-  //   } catch (e) {
-  //     return console.error("Error retrieving access token", err);
-  //   }
-  // });
-  // return oAuth2Client;
 }
 
-// create and return oAuth client
-module.exports = async function createOAuth() {
-  try {
-    const content = await promisifiedReadFile("credentials.json");
-    const auth = await authorize(JSON.parse(content));
-    return auth;
-  } catch (e) {
-    console.log(e);
-  }
-};
+module.exports = authorize;

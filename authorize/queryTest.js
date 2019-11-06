@@ -1,12 +1,13 @@
 "use strict";
-const createOAuth = require("./authorize");
+const authorize = require("./authorize");
 const { google } = require("googleapis");
 
 /**
  * Lists the next 10 events on the user's primary calendar.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-async function canlendarTest(calendar) {
+async function canlendarTest(auth) {
+  const calendar = await google.calendar({ version: "v3", auth });
   try {
     const res = await calendar.calendarList.list({});
     const calendars = res.data.items;
@@ -45,9 +46,10 @@ async function canlendarTest(calendar) {
 }
 
 // get auth and run listEvent
-(async () => {
-  const auth = await createOAuth();
-  console.log("auth res:", auth);
-  const calendar = await google.calendar({ version: "v3", auth });
-  canlendarTest(calendar);
-})();
+// (async () => {
+//   const auth = await authorize("credentials.json", "token.json");
+//   console.log("auth res:", auth);
+//   canlendarTest(auth);
+// })();
+
+module.exports = canlendarTest;

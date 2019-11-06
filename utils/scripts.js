@@ -57,18 +57,40 @@ const isMinuteValid = minute => {
 
 const getAllDaysFromMonth = (year, month) => {
   let date = new Date(Date.UTC(year, month - 1));
-  let targetMonth = date.getMonth();
-  console.log("targetMonth:", targetMonth);
+  let targetMonth = date.getUTCMonth();
   let dateList = [];
-  while (date.getMonth() === targetMonth) {
+  while (date.getUTCMonth() === targetMonth) {
     dateList.push(new Date(date));
-    date.setDate(date.getDate() + 1);
-    console.log("date:", date);
+    date.setUTCDate(date.getUTCDate() + 1);
   }
   return dateList;
 };
 
-console.log(getAllDaysFromMonth(2019, 10));
+const getAllSlotsFromDay = date => {
+  let dateCopy = new Date(date);
+  let slotList = [];
+  if (dateCopy.getUTCDay() === 5 || dateCopy.getUTCDay() === 6) {
+  } else {
+    dateCopy.setUTCHours(9);
+    let currentSlotEndTime = new Date(dateCopy);
+    currentSlotEndTime.setUTCMinutes(currentSlotEndTime.getUTCMinutes() + 40);
+    while (currentSlotEndTime.getUTCHours() < 18) {
+      let tempDay = new Date(dateCopy);
+      let slot = {
+        startTime: new Date(tempDay),
+        endTime: new Date(tempDay.setUTCMinutes(tempDay.getUTCMinutes() + 40))
+      };
+      slotList.push(slot);
+      dateCopy.setUTCMinutes(dateCopy.getUTCMinutes() + 45);
+      currentSlotEndTime = new Date(dateCopy);
+      currentSlotEndTime.setUTCMinutes(currentSlotEndTime.getUTCMinutes() + 40);
+    }
+  }
+  return slotList;
+};
+
+getAllDaysFromMonth(2019, 10).map(day => console.log(day));
+getAllDaysFromMonth(2019, 10).map(day => console.log(getAllSlotsFromDay(day)));
 
 module.exports = {
   isYearValid,

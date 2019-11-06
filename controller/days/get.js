@@ -1,4 +1,6 @@
 "use strict";
+const authorize = require("../../authorize/authorize");
+const canlendarTest = require("../../authorize/queryTest");
 const { isYearValid, isMonthValid } = require("../../utils/scripts");
 
 module.exports = async (req, res, next) => {
@@ -19,6 +21,13 @@ module.exports = async (req, res, next) => {
         message: `Variable format not valid`
       });
     } else {
+      // canlendar auth and test //
+      const auth = await authorize(
+        `${global.basePath}/authorize/credentials.json`,
+        `${global.basePath}/authorize/token.json`
+      );
+      canlendarTest(auth);
+      // canlendar auth and test //
       res.send({ success: true, message: "result" });
     }
   } catch (e) {
