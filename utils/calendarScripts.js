@@ -1,0 +1,41 @@
+"use strict";
+const { google } = require("googleapis");
+
+/**
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ * @param {Date} startTime start time of period
+ * @param {Date} endTime end time of period
+ */
+async function getEventListFromPeriod(auth, startTime, endTime) {
+  const calendar = await google.calendar({ version: "v3", auth });
+  let eventList = [];
+  console.log(startTime, endTime);
+  try {
+    const res = await calendar.events.list({
+      calendarId: "primary",
+      timeMin: new Date(startTime).toISOString(),
+      timeMax: new Date(endTime).toISOString(),
+      singleEvents: true,
+      orderBy: "startTime"
+    });
+    const events = res.data.items;
+    if (events.length) {
+      console.log("events:");
+      events.map((event, i) => {
+        const start = event.start.dateTime || event.start.date;
+        const end = event.end.dateTime || event.end.date;
+        console.log(event.summary);
+        console.log("start:", new Date(start));
+        console.log("end:", new Date(end));
+        eventList.push({ startTime: new Date(start), endTime: new Date(end) });
+      });
+    } else {
+      console.log("No events found.");
+    }
+  } catch (e) {
+    console.log("The API returned an error: " + e);
+  }
+  return eventList;
+}
+
+module.exports = { getEventListFromPeriod };

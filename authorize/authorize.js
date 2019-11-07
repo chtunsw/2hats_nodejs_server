@@ -9,10 +9,8 @@ const promisifiedReadFile = util.promisify(fs.readFile);
 const promisifiedWriteFile = util.promisify(fs.writeFile);
 
 /**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
+ * @param {String} CREDENTIAL_PATH path of credentials.json
+ * @param {String} TOKEN_PATH path of token.json
  */
 async function authorize(CREDENTIAL_PATH, TOKEN_PATH) {
   const fileContent = await promisifiedReadFile(CREDENTIAL_PATH);
@@ -36,10 +34,7 @@ async function authorize(CREDENTIAL_PATH, TOKEN_PATH) {
 }
 
 /**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
  */
 async function getAccessToken(oAuth2Client) {
   const authUrl = await oAuth2Client.generateAuthUrl({

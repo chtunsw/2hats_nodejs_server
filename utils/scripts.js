@@ -69,7 +69,7 @@ const getAllDaysFromMonth = (year, month) => {
 const getAllSlotsFromDay = date => {
   let dateCopy = new Date(date);
   let slotList = [];
-  if (dateCopy.getUTCDay() === 5 || dateCopy.getUTCDay() === 6) {
+  if (dateCopy.getUTCDay() === 0 || dateCopy.getUTCDay() === 6) {
   } else {
     dateCopy.setUTCHours(9);
     let currentSlotEndTime = new Date(dateCopy);
@@ -89,13 +89,61 @@ const getAllSlotsFromDay = date => {
   return slotList;
 };
 
-getAllDaysFromMonth(2019, 10).map(day => console.log(day));
-getAllDaysFromMonth(2019, 10).map(day => console.log(getAllSlotsFromDay(day)));
+const getAvailableSlots = (potentialSlots, busySlots) => {
+  let availableSlots = [...potentialSlots];
+  let badSlots = [];
+  let potentialIndex = 0;
+  let busyIndex = 0;
+  // traverse both array
+  while (
+    potentialIndex <= potentialSlots.length - 1 &&
+    busyIndex <= busySlots.length - 1
+  ) {
+    // if potential slot starts before busy slot ends
+    if (
+      potentialSlots[potentialIndex].startTime.getTime() <
+      busySlots[busyIndex].endTime.getTime()
+    ) {
+      // if potential slot ends after busy slot starts
+      if (
+        potentialSlots[potentialIndex].endTime.getTime() >
+        busySlots[busyIndex].startTime.getTime()
+      ) {
+        if (!badSlots.includes(potentialSlots[potentialIndex])) {
+          badSlots.push(potentialSlots[potentialIndex]);
+          availableSlots.splice(
+            availableSlots.indexOf(potentialSlots[potentialIndex]),
+            1
+          );
+        }
+      }
+      if (potentialIndex < potentialSlots.length - 1) {
+        potentialIndex += 1;
+      } else if (busyIndex < busySlots.length - 1) {
+        busyIndex += 1;
+      } else {
+        break;
+      }
+    } else {
+      if (busyIndex < busySlots.length - 1) {
+        busyIndex += 1;
+      } else if (potentialIndex < potentialSlots.length - 1) {
+        potentialIndex += 1;
+      } else {
+        break;
+      }
+    }
+  }
+  return availableSlots;
+};
 
 module.exports = {
   isYearValid,
   isMonthValid,
   isDayValid,
   isHourValid,
-  isMinuteValid
+  isMinuteValid,
+  getAllDaysFromMonth,
+  getAllSlotsFromDay,
+  getAvailableSlots
 };

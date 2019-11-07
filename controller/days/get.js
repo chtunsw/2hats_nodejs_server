@@ -1,6 +1,11 @@
 "use strict";
 const authorize = require("../../authorize/authorize");
-const canlendarTest = require("../../authorize/queryTest");
+const { getEventListFromPeriod } = require("../../utils/calendarScripts");
+const {
+  getAllDaysFromMonth,
+  getAllSlotsFromDay,
+  getAvailableSlots
+} = require("../../utils/scripts");
 const { isYearValid, isMonthValid } = require("../../utils/scripts");
 
 module.exports = async (req, res, next) => {
@@ -21,14 +26,37 @@ module.exports = async (req, res, next) => {
         message: `Variable format not valid`
       });
     } else {
-      // canlendar auth and test //
+      const dateList = getAllDaysFromMonth(Number(year), Number(month));
+      const dateIndexList = dateList.reduce(
+        (accumulator, currentValue) =>
+          accumulator.concat(currentValue.getUTCDate()),
+        []
+      );
+      const potentialSlots = dateList.reduce(
+        (accumulator, currentValue) =>
+          accumulator.concat(getAllSlotsFromDay(currentValue)),
+        []
+      );
+      const startTime = new Date(dateList[0]);
+      const endTime = new Date(dateList[dateList.length - 1]);
+      endTime.setUTCDate(endTime.getUTCDate() + 1);
       const auth = await authorize(
         `${global.basePath}/authorize/credentials.json`,
         `${global.basePath}/authorize/token.json`
       );
-      canlendarTest(auth);
-      // canlendar auth and test //
-      res.send({ success: true, message: "result" });
+      const eventList = await getEventListFromPeriod(auth, startTime, endTime);
+      const availableSlots = getAvailableSlots(potentialSlots, eventList);
+      const availableDateIndexList = availableSlots
+        .map(slot => slot.startTime.getUTCDate())
+        .filter((value, index, array) => array.indexOf(value) === index);
+      const result = dateIndexList.map(dateIndex => {
+        if (availableDateIndexList.includes(dateIndex)) {
+          return { day: dateIndex, hasTimeSlots: true };
+        } else {
+          return { day: dateIndex, hasTimeSlots: false };
+        }
+      });
+      res.send({ success: true, message: result });
     }
   } catch (e) {
     res.send({ success: false, message: "Internal error" });
