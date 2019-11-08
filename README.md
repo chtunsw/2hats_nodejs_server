@@ -4,7 +4,7 @@
 
 ### Get Credentials for Google Calendar API
 
-- Create a Google Cloud Platform (GCP) project with the Google Calendar API enabled
+- Create a Google Cloud Platform (GCP) project with the Google Calendar API enabled.
 - Go to APIs & Services and create credentials (OAuth client ID).
 - Download the client secret .json file from the the client ID you have just created. Then rename it as "credentials.json".
 
@@ -12,9 +12,10 @@
 
 - Clone this project, and in root directory, run:
 - npm install
-- Put your credentials.json into /authorize directory
-- Under /authorize directory, you can get a token by running:
+- Put your credentials.json into /authorize directory.
+- Under /authorize directory, run:
 - node getToken.js
+- Follow the instructions in terminal to get the token.
 
 ### Start the server
 
