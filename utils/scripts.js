@@ -1,9 +1,7 @@
 "use strict";
 
 const isYearValid = year => {
-  if (year.length !== 4) {
-    return false;
-  } else if (isNaN(year)) {
+  if (isNaN(year)) {
     return false;
   } else if (Number(year) < 2019) {
     return false;
@@ -12,9 +10,7 @@ const isYearValid = year => {
 };
 
 const isMonthValid = month => {
-  if (month.length !== 2) {
-    return false;
-  } else if (isNaN(month)) {
+  if (isNaN(month)) {
     return false;
   } else if (Number(month) < 1 || Number(month) > 12) {
     return false;
@@ -23,9 +19,7 @@ const isMonthValid = month => {
 };
 
 const isDayValid = day => {
-  if (day.length !== 2) {
-    return false;
-  } else if (isNaN(day)) {
+  if (isNaN(day)) {
     return false;
   } else if (Number(day) < 1 || Number(day) > 31) {
     return false;
@@ -34,9 +28,7 @@ const isDayValid = day => {
 };
 
 const isHourValid = hour => {
-  if (hour.length !== 2) {
-    return false;
-  } else if (isNaN(hour)) {
+  if (isNaN(hour)) {
     return false;
   } else if (Number(hour) < 0 || Number(hour) > 23) {
     return false;
@@ -45,9 +37,7 @@ const isHourValid = hour => {
 };
 
 const isMinuteValid = minute => {
-  if (minute.length !== 2) {
-    return false;
-  } else if (isNaN(minute)) {
+  if (isNaN(minute)) {
     return false;
   } else if (Number(minute) < 0 || Number(minute) > 59) {
     return false;
