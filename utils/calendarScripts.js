@@ -9,7 +9,6 @@ const { google } = require("googleapis");
 async function getEventListFromPeriod(auth, startTime, endTime) {
   const calendar = await google.calendar({ version: "v3", auth });
   let eventList = [];
-  console.log(startTime, endTime);
   try {
     const res = await calendar.events.list({
       calendarId: "primary",
@@ -38,4 +37,22 @@ async function getEventListFromPeriod(auth, startTime, endTime) {
   return eventList;
 }
 
-module.exports = { getEventListFromPeriod };
+async function createSingleEvent(auth, summary, startTime, endTime) {
+  const calendar = await google.calendar({ version: "v3", auth });
+  let res;
+  try {
+    res = await calendar.events.insert({
+      calendarId: "primary",
+      resource: {
+        summary: summary,
+        start: { dateTime: new Date(startTime).toISOString() },
+        end: { dateTime: new Date(endTime).toISOString() }
+      }
+    });
+  } catch (e) {
+    console.log("The API returned an error: " + e);
+  }
+  return res;
+}
+
+module.exports = { getEventListFromPeriod, createSingleEvent };
