@@ -89,7 +89,7 @@ module.exports = async (req, res, next) => {
             endTime: targetSlotEndTime
           });
         } else {
-          res.send({ success: true, message: "Invalid time slot" });
+          res.send({ success: false, message: "Invalid time slot" });
         }
       }
     }
