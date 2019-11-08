@@ -27,7 +27,7 @@ async function authorize(CREDENTIAL_PATH, TOKEN_PATH) {
     oAuth2Client.setCredentials(JSON.parse(token).tokens);
   } catch (e) {
     console.log("need a new token:");
-    return await getAccessToken(oAuth2Client);
+    return await getAccessToken(oAuth2Client, TOKEN_PATH);
   }
 
   return oAuth2Client;
@@ -35,8 +35,9 @@ async function authorize(CREDENTIAL_PATH, TOKEN_PATH) {
 
 /**
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+ * @param {String} TOKEN_PATH path of token.json
  */
-async function getAccessToken(oAuth2Client) {
+async function getAccessToken(oAuth2Client, TOKEN_PATH) {
   const authUrl = await oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: ["https://www.googleapis.com/auth/calendar"]
