@@ -1,5 +1,5 @@
 "use strict";
-const authorize = require("../../authorize/authorize");
+const { authorize } = require("../../authorize/authorize");
 const { getEventListFromPeriod } = require("../../utils/calendarScripts");
 const {
   getAllDaysFromMonth,
@@ -56,7 +56,7 @@ module.exports = async (req, res, next) => {
           return { day: dateIndex, hasTimeSlots: false };
         }
       });
-      res.send({ success: true, message: result });
+      res.send({ success: true, days: result });
     }
   } catch (e) {
     res.send({ success: false, message: "Internal error" });

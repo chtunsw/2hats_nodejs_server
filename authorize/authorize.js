@@ -69,4 +69,4 @@ async function getAccessToken(oAuth2Client) {
   return authPromise;
 }
 
-module.exports = authorize;
+module.exports = { authorize };
