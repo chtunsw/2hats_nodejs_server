@@ -70,7 +70,12 @@ const getAllSlotsFromDay = date => {
         startTime: new Date(tempDay),
         endTime: new Date(tempDay.setUTCMinutes(tempDay.getUTCMinutes() + 40))
       };
-      slotList.push(slot);
+      let appointmentTime = new Date(slot.startTime);
+      appointmentTime.setUTCDate(appointmentTime.getUTCDate() - 1);
+      let currentTime = new Date(new Date().toUTCString());
+      if (currentTime.getTime() < appointmentTime.getTime()) {
+        slotList.push(slot);
+      }
       dateCopy.setUTCMinutes(dateCopy.getUTCMinutes() + 45);
       currentSlotEndTime = new Date(dateCopy);
       currentSlotEndTime.setUTCMinutes(currentSlotEndTime.getUTCMinutes() + 40);
