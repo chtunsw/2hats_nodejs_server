@@ -1,4 +1,4 @@
-# Booking System
+# Google Calendar Booking System
 
 ## Instructions
 
