@@ -2,9 +2,10 @@
 const { google } = require("googleapis");
 
 /**
+ * Get event list in a period from Google Calender API.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- * @param {Date} startTime start time of period
- * @param {Date} endTime end time of period
+ * @param {Date} startTime Start time of period.
+ * @param {Date} endTime End time of period.
  */
 async function getEventListFromPeriod(auth, startTime, endTime) {
   const calendar = await google.calendar({ version: "v3", auth });
@@ -37,6 +38,13 @@ async function getEventListFromPeriod(auth, startTime, endTime) {
   return eventList;
 }
 
+/**
+ * Create a single event with Google Calender API.
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ * @param {String} summary Summary of the event.
+ * @param {Date} startTime Start time of period.
+ * @param {Date} endTime End time of period.
+ */
 async function createSingleEvent(auth, summary, startTime, endTime) {
   const calendar = await google.calendar({ version: "v3", auth });
   let res;

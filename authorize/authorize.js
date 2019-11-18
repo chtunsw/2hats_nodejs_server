@@ -9,6 +9,7 @@ const promisifiedReadFile = util.promisify(fs.readFile);
 const promisifiedWriteFile = util.promisify(fs.writeFile);
 
 /**
+ * Create an authorized client with credential and token.
  * @param {String} CREDENTIAL_PATH path of credentials.json
  * @param {String} TOKEN_PATH path of token.json
  */
@@ -34,6 +35,7 @@ async function authorize(CREDENTIAL_PATH, TOKEN_PATH) {
 }
 
 /**
+ * Create a new token and return an authorized client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  * @param {String} TOKEN_PATH path of token.json
  */

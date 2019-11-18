@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Check if year is valid.
+ * @param {String} year Target year string.
+ */
 const isYearValid = year => {
   if (isNaN(year)) {
     return false;
@@ -9,6 +13,10 @@ const isYearValid = year => {
   return true;
 };
 
+/**
+ * Check if month is valid.
+ * @param {String} month Target month string.
+ */
 const isMonthValid = month => {
   if (isNaN(month)) {
     return false;
@@ -18,6 +26,10 @@ const isMonthValid = month => {
   return true;
 };
 
+/**
+ * Check if day is valid.
+ * @param {String} day Target day string.
+ */
 const isDayValid = day => {
   if (isNaN(day)) {
     return false;
@@ -27,6 +39,10 @@ const isDayValid = day => {
   return true;
 };
 
+/**
+ * Check if hour is valid.
+ * @param {String} hour Target hour string.
+ */
 const isHourValid = hour => {
   if (isNaN(hour)) {
     return false;
@@ -36,6 +52,10 @@ const isHourValid = hour => {
   return true;
 };
 
+/**
+ * Check if minute is valid.
+ * @param {String} minute Target year string.
+ */
 const isMinuteValid = minute => {
   if (isNaN(minute)) {
     return false;
@@ -45,6 +65,11 @@ const isMinuteValid = minute => {
   return true;
 };
 
+/**
+ * Get all working days from target month.
+ * @param {Number} year Not zero-indexed.
+ * @param {Number} month Not zero-indexed.
+ */
 const getAllDaysFromMonth = (year, month) => {
   let date = new Date(Date.UTC(year, month - 1));
   let targetMonth = date.getUTCMonth();
@@ -56,6 +81,10 @@ const getAllDaysFromMonth = (year, month) => {
   return dateList;
 };
 
+/**
+ * Get all slots from target date.
+ * @param {Date} date Target date.
+ */
 const getAllSlotsFromDay = date => {
   let dateCopy = new Date(date);
   let slotList = [];
@@ -84,6 +113,11 @@ const getAllSlotsFromDay = date => {
   return slotList;
 };
 
+/**
+ * Get all available slots from potential slots that don't overlap with busy slots.
+ * @param {Array.<{startTime: Date, endTime: Date}>} potentialSlots All potential slots.
+ * @param {Array.<{startTime: Date, endTime: Date}>} busySlots Existing busy slots.
+ */
 const getAvailableSlots = (potentialSlots, busySlots) => {
   let availableSlots = [...potentialSlots];
   let badSlots = [];

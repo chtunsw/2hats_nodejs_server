@@ -15,16 +15,19 @@ module.exports = async (req, res, next) => {
     const missedVariables = Object.keys(variables).filter(key => {
       return variables[key] === undefined;
     });
+    // Check if variable missing.
     if (missedVariables.length !== 0) {
       res.send({
         success: false,
         message: `Request is missing variable: ${missedVariables[0]}`
       });
+      // Check if variables are valid.
     } else if (!(isYearValid(year) && isMonthValid(month))) {
       res.send({
         success: false,
         message: `Variable format not valid`
       });
+      // Try to get days with availability status.
     } else {
       const dateList = getAllDaysFromMonth(Number(year), Number(month));
       const dateIndexList = dateList.reduce(

@@ -16,16 +16,19 @@ module.exports = async (req, res, next) => {
     const missedVariables = Object.keys(variables).filter(key => {
       return variables[key] === undefined;
     });
+    // Check if variable missing.
     if (missedVariables.length !== 0) {
       res.send({
         success: false,
         message: `Request is missing variable: ${missedVariables[0]}`
       });
+      // Check if variables are valid.
     } else if (!(isYearValid(year) && isMonthValid(month) && isDayValid(day))) {
       res.send({
         success: false,
         message: `Variable format not valid`
       });
+      // Try to get all available time slots from target date.
     } else {
       let startTime = new Date(
         Date.UTC(Number(year), Number(month) - 1, Number(day))

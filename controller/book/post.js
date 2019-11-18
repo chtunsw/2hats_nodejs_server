@@ -21,11 +21,13 @@ module.exports = async (req, res, next) => {
     const missedVariables = Object.keys(variables).filter(key => {
       return variables[key] === undefined;
     });
+    // Check if variable missing.
     if (missedVariables.length !== 0) {
       res.send({
         success: false,
         message: `Request is missing variable: ${missedVariables[0]}`
       });
+      // Check if variables are valid.
     } else if (
       !(
         isYearValid(year) &&
@@ -54,11 +56,13 @@ module.exports = async (req, res, next) => {
       let appointmentTime = new Date(targetSlotStartTime);
       appointmentTime.setUTCDate(appointmentTime.getUTCDate() - 1);
       let currentTime = new Date(new Date().toUTCString());
+      // Check if passed booking time.
       if (currentTime.getTime() > appointmentTime.getTime()) {
         res.send({
           success: false,
           message: "Bookings can only be made at least 24 hours in advance"
         });
+        // Try to book a time slot in Google Calendar.
       } else {
         let startDate = new Date(
           Date.UTC(Number(year), Number(month) - 1, Number(day))
